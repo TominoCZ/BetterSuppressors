@@ -3,12 +3,40 @@
 # Packages the built mod into BetterSuppressors_<version>.zip next to this script.
 #
 # Usage:
-#   export SPT_RUNTIME=/path/to/SPT/SPT_Runtime
 #   ./package.sh
+#
+# SPT_RUNTIME comes from .env next to this script (see .env.example), or from the
+# environment, which wins over the file.
 #
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Read KEY=VALUE out of .env without executing it. Anything already set in the
+# environment wins, so SPT_RUNTIME=... ./package.sh still overrides the file.
+ENV_FILE="${ENV_FILE:-$HERE/.env}"
+if [[ -f "$ENV_FILE" ]]; then
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        [[ "$line" =~ ^[[:space:]]*(#|$) ]] && continue
+        [[ "$line" =~ ^[[:space:]]*(export[[:space:]]+)?([A-Za-z_][A-Za-z0-9_]*)[[:space:]]*=(.*)$ ]] || continue
+
+        key="${BASH_REMATCH[2]}"
+        value="${BASH_REMATCH[3]}"
+        value="${value#"${value%%[![:space:]]*}"}"
+        value="${value%"${value##*[![:space:]]}"}"
+        if [[ ${#value} -ge 2 && ( "$value" == \"*\" || "$value" == \'*\' ) ]]; then
+            value="${value:1:${#value}-2}"
+        fi
+
+        [[ -n "${!key:-}" ]] || export "$key=$value"
+    done < "$ENV_FILE"
+fi
+
+if [[ -z "${SPT_RUNTIME:-}" ]]; then
+    echo "package.sh: SPT_RUNTIME is not set. Copy .env.example to .env and point it at" >&2
+    echo "            your SPT server folder, or export SPT_RUNTIME before running." >&2
+    exit 1
+fi
 PROJECT="$HERE/src/BetterSuppressors"
 CONFIGURATION="${CONFIGURATION:-Release}"
 

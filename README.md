@@ -86,12 +86,37 @@ taking the server down during load.
 
 ## Building
 
-Needs the .NET 10 SDK. Point the build at your SPT server folder — the one holding
-`SPTarkov.Server.Core.dll`:
+Needs the .NET 10 SDK, and the build has to know where your SPT server folder is — the
+one holding `SPTarkov.Server.Core.dll`. Copy the example and edit it once:
+
+```bash
+cp .env.example .env
+```
+
+```
+SPT_RUNTIME=/path/to/SPT/SPT_Runtime
+```
+
+`.env` is gitignored, so your local path stays out of the repo. `package.sh` reads it
+automatically. An `SPT_RUNTIME` already set in your environment takes precedence over the
+file, so a one-off still works:
+
+```bash
+SPT_RUNTIME=/some/other/SPT_Runtime ./package.sh
+```
+
+`dotnet build` does not read `.env` — MSBuild only sees real environment variables — so
+when building directly, either export it:
 
 ```bash
 export SPT_RUNTIME=/path/to/SPT/SPT_Runtime
 dotnet build
+```
+
+or pass it on the command line:
+
+```bash
+dotnet build -p:SptRuntime=/path/to/SPT/SPT_Runtime
 ```
 
 Build straight into the server:
@@ -106,7 +131,6 @@ tuned.
 ## Packaging a release
 
 ```bash
-export SPT_RUNTIME=/path/to/SPT/SPT_Runtime
 ./package.sh
 ```
 
