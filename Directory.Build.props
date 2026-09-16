@@ -1,0 +1,21 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <!-- The SPT server folder holding SPTarkov.Server.Core.dll. -->
+  <PropertyGroup>
+    <SptRuntime Condition="'$(SptRuntime)' == ''">$(SPT_RUNTIME)</SptRuntime>
+  </PropertyGroup>
+
+  <Target Name="VerifySptRuntime" BeforeTargets="BeforeBuild">
+    <Error Condition="'$(SptRuntime)' == ''"
+           Text="SptRuntime is not set. Export SPT_RUNTIME=/path/to/SPT/SPT_Runtime or build with -p:SptRuntime=..." />
+    <Error Condition="!Exists('$(SptRuntime)/SPTarkov.Server.Core.dll')"
+           Text="SPTarkov.Server.Core.dll not found under '$(SptRuntime)'. Point SptRuntime at the SPT server folder." />
+  </Target>
+</Project>

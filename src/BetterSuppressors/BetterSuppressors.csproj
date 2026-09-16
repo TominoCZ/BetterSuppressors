@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Version>1.0.0</Version>
+    <AssemblyName>BetterSuppressors</AssemblyName>
+    <RootNamespace>BetterSuppressors</RootNamespace>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <!-- Supplied by the running server. -->
+  <ItemGroup>
+    <Reference Include="SPTarkov.Server.Core">
+      <HintPath>$(SptRuntime)/SPTarkov.Server.Core.dll</HintPath><Private>false</Private>
+    </Reference>
+    <Reference Include="SPTarkov.Common">
+      <HintPath>$(SptRuntime)/SPTarkov.Common.dll</HintPath><Private>false</Private>
+    </Reference>
+    <Reference Include="SPTarkov.DI">
+      <HintPath>$(SptRuntime)/SPTarkov.DI.dll</HintPath><Private>false</Private>
+    </Reference>
+    <Reference Include="SemanticVersioning">
+      <HintPath>$(SptRuntime)/SemanticVersioning.dll</HintPath><Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="config.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!-- dotnet build -p:SptDeploy=true  installs straight into the server. -->
+  <Target Name="DeployToSpt" AfterTargets="Build" Condition="'$(SptDeploy)' == 'true'">
+    <PropertyGroup>
+      <SptModDir Condition="'$(SptModDir)' == ''">$(SptRuntime)/user/mods/BetterSuppressors</SptModDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(SptModDir)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SptModDir)" />
+    <!-- Don't clobber a tuned config. -->
+    <Copy SourceFiles="config.json" DestinationFolder="$(SptModDir)" Condition="!Exists('$(SptModDir)/config.json')" />
+    <Message Importance="high" Text="BetterSuppressors -> $(SptModDir)" />
+  </Target>
+
+</Project>

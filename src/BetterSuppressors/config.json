@@ -1,0 +1,10 @@
+{
+  "Ergonomics": 0,
+  "DurabilityBurn": 1.0,
+
+  "HeatFactor": 0.90,
+  "CoolFactor": 0.92,
+
+  "Accuracy": 6,
+  "Velocity": 6
+}

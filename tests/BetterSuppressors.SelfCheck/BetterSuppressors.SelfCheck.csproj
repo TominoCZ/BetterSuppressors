@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>BetterSuppressors.SelfCheck</AssemblyName>
+    <RootNamespace>BetterSuppressors.SelfCheck</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="../../src/BetterSuppressors/BetterSuppressors.csproj" />
+  </ItemGroup>
+
+  <!-- No server here to supply these, so copy them. -->
+  <ItemGroup>
+    <Reference Include="SPTarkov.Server.Core"><HintPath>$(SptRuntime)/SPTarkov.Server.Core.dll</HintPath></Reference>
+    <Reference Include="SPTarkov.Common"><HintPath>$(SptRuntime)/SPTarkov.Common.dll</HintPath></Reference>
+    <Reference Include="SPTarkov.DI"><HintPath>$(SptRuntime)/SPTarkov.DI.dll</HintPath></Reference>
+    <Reference Include="SemanticVersioning"><HintPath>$(SptRuntime)/SemanticVersioning.dll</HintPath></Reference>
+  </ItemGroup>
+
+</Project>

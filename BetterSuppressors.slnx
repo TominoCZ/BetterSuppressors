@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BetterSuppressors/BetterSuppressors.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BetterSuppressors.SelfCheck/BetterSuppressors.SelfCheck.csproj" />
+  </Folder>
+</Solution>
