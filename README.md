@@ -1,69 +1,52 @@
+<img src="BetterSuppressors.png" width="180" align="right" alt="BetterSuppressors">
+
 # BetterSuppressors
 
 A mod for SPT that makes suppressors actually useful.
 
-In vanilla Tarkov a suppressor is a trade: you buy quiet with ergonomics, durability
-burn and heat. This mod removes that trade and turns the can into what a big lump of
-steel on the muzzle ought to be — neutral on handling, easier on the barrel, and a
-genuine help at range.
-
-Recoil and loudness are left alone; those were already in your favour.
+In vanilla, a suppressor charges you ergonomics, durability burn and heat in exchange for
+being quiet. This mod drops that tax and makes the can help instead.
 
 ## What it changes
 
-Every suppressor in the database (the 76 items under the `Silencer` node) gets:
+Every suppressor in the game (76 of them):
 
-| Property | Vanilla range | Default here | Effect |
-|---|---|---|---|
-| `Ergonomics` | −30 … −2 | `0` | handling penalty gone |
-| `DurabilityBurnModificator` | 1.2 … 2.15 | `1.0` | barrel wears as if unsuppressed |
-| `HeatFactor` | 1.05 … 1.34 | `0.90` | generates less heat |
-| `CoolFactor` | 1.0 … 1.2 | `0.92` | sheds heat faster |
-| `Accuracy` | −5 … +1 | `+6` | tighter groups |
-| `Velocity` | +0.2 … +1.2 | `+6` | flatter trajectory |
+| | Vanilla | Here |
+|---|---|---|
+| Ergonomics | −30 … −2 | **0** |
+| Durability burn | +20% … +115% | **none** |
+| Heat | +5% … +34% | **−10%** |
+| Cooling | up to 20% worse | **8% better** |
+| Accuracy | −5 … +1 | **+6** |
+| Muzzle velocity | +0.2 … +1.2 | **+6** |
 
-### Two things worth knowing
+Recoil and loudness are left alone — those were already in your favour.
 
-**`CoolFactor` runs backwards from how it reads.** A value above 1 is a *penalty*, not
-a bonus. The proof is in the vanilla data: the parts with `CoolFactor` below 1 are the
-long heavy barrels — Mosin 730mm, PKP, M700 heavy, AX .308 — all sitting near
-`0.82` heat / `0.86` cool. Those are the game's own "lots of steel, handles heat well"
-components. Lower is better for both fields, and vanilla suppressors are penalised on
-both. If you tune these, tune them downward.
-
-**There is no range-gated stat.** `EffectiveDistance` exists on items but is `0` on all
-4673 of them — dead, wired to nothing. `SightingRange` is just a sight's zeroing value.
-So "better at medium range" is not something the database can be told directly. It
-falls out of `Velocity`: a flatter arc is invisible at 50 m and worth real drop and
-time-of-flight compensation by 350 m. `Accuracy` behaves the same way, since a fixed
-MOA change is 3.5 cm at 100 m and 12 cm at 350 m.
+The velocity bump is what makes suppressors worth it at range: it barely shows at 50 m,
+but flattens the arc noticeably by 350 m.
 
 ## Install
 
-Extract the release zip into your SPT folder, or drop `BetterSuppressors.dll` and
+Requires SPT `4.1.5`.
+
+Extract the release zip into your SPT folder, or copy `BetterSuppressors.dll` and
 `config.json` into:
 
 ```
 <SPT>/SPT_Runtime/user/mods/BetterSuppressors/
 ```
 
-This is a server mod. It does not go in `BepInEx/plugins` -- there is no client-side
-component, and the server mod loader does not look there.
-
-Restart the server. It logs what it did:
+Restart the server. It reports what it did on startup:
 
 ```
 [BetterSuppressors] patched 76 suppressors from config.json (erg 0, burn 1, heat 0.9, ...)
 ```
 
-That count is whatever your database actually holds — 76 on stock SPT 4.1.5, more if
-another mod adds suppressors of its own, which this mod will happily patch too.
-
-Requires SPT `~4.1.5`.
+This is a server mod — it does not go in `BepInEx/plugins`.
 
 ## Configuring
 
-Edit `config.json` next to the DLL and restart the server. No rebuild needed.
+Edit `config.json` and restart the server. No rebuild needed.
 
 ```json
 {
@@ -76,78 +59,29 @@ Edit `config.json` next to the DLL and restart the server. No rebuild needed.
 }
 ```
 
-For reference when tuning: `+6` velocity takes 5.56 from roughly 880 to 933 m/s. Real
-suppressors are worth about +1–3%, which is close to vanilla; +6 is a deliberate
-gameplay buff. On heat, `0.82`/`0.86` would make a suppressor as good a heat sink as
-the heaviest barrels in the game.
-
-A missing or malformed `config.json` falls back to the built-in defaults rather than
-taking the server down during load.
+For the two heat values, **lower is better**. Both are penalties above `1.0` in vanilla,
+and the game's heavy barrels — its best heat sinks — sit around `0.82` and `0.86`.
 
 ## Building
 
-Needs the .NET 10 SDK, and the build has to know where your SPT server folder is — the
-one holding `SPTarkov.Server.Core.dll`. Copy the example and edit it once:
+Needs the .NET 10 SDK and the path to your SPT server folder.
+
+`package.sh` picks the path up from `.env`:
 
 ```bash
-cp .env.example .env
+cp .env.example .env    # then edit SPT_RUNTIME
+./package.sh            # builds the release zip
 ```
 
-```
-SPT_RUNTIME=/path/to/SPT/SPT_Runtime
-```
-
-`.env` is gitignored, so your local path stays out of the repo. `package.sh` reads it
-automatically. An `SPT_RUNTIME` already set in your environment takes precedence over the
-file, so a one-off still works:
-
-```bash
-SPT_RUNTIME=/some/other/SPT_Runtime ./package.sh
-```
-
-`dotnet build` does not read `.env` — MSBuild only sees real environment variables — so
-when building directly, either export it:
+Everything else needs it as a real environment variable, since MSBuild can't read `.env`:
 
 ```bash
 export SPT_RUNTIME=/path/to/SPT/SPT_Runtime
-dotnet build
+
+dotnet build                                            # compile
+dotnet build -p:SptDeploy=true                          # install into your server
+dotnet run --project tests/BetterSuppressors.SelfCheck  # run the checks
 ```
-
-or pass it on the command line:
-
-```bash
-dotnet build -p:SptRuntime=/path/to/SPT/SPT_Runtime
-```
-
-Build straight into the server:
-
-```bash
-dotnet build src/BetterSuppressors -p:SptDeploy=true
-```
-
-That copies the DLL every time but will not overwrite a `config.json` you have already
-tuned.
-
-## Packaging a release
-
-```bash
-./package.sh
-```
-
-Builds Release and writes `BetterSuppressors_<version>.zip` next to the script, laid out
-so it extracts straight into the SPT folder. The version comes from `<Version>` in the
-csproj, which also stamps the assembly, so the filename cannot drift from what the server
-reports on load.
-
-## Tests
-
-```bash
-dotnet run --project tests/BetterSuppressors.SelfCheck
-```
-
-Asserts that the patch hits only real suppressors — skipping the category `Node`, the
-neighbouring flash hiders, and entries with no properties — and that it leaves recoil
-and loudness alone. Exits non-zero on failure.
 
 ## Licence
 
