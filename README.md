@@ -29,8 +29,8 @@ but flattens the arc noticeably by 350 m.
 
 Requires SPT `4.1.5`.
 
-Extract the release zip into your SPT folder, or copy `BetterSuppressors.dll` and
-`config.json` into:
+Extract the release zip into your SPT folder. That puts `BetterSuppressors.dll` and
+`config.json` here:
 
 ```
 <SPT>/SPT_Runtime/user/mods/BetterSuppressors/

@@ -41,7 +41,7 @@ PROJECT="$HERE/src/BetterSuppressors"
 CONFIGURATION="${CONFIGURATION:-Release}"
 
 # Where the mod lands when the zip is extracted into the SPT folder.
-DEST="${DEST:-user/mods/BetterSuppressors}"
+DEST="${DEST:-SPT_Runtime/user/mods/BetterSuppressors}"
 
 VERSION="$(sed -n 's:.*<Version>\([0-9][^<]*\)</Version>.*:\1:p' "$PROJECT/BetterSuppressors.csproj" | head -1)"
 
