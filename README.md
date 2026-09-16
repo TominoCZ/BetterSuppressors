@@ -16,7 +16,7 @@ Every suppressor in the game (76 of them):
 | Ergonomics | −30 … −2 | **0** |
 | Durability burn | +20% … +115% | **none** |
 | Heat | +5% … +34% | **−10%** |
-| Cooling | up to 20% worse | **8% better** |
+| Cooling | +0% … +20% | **+25%** |
 | Accuracy | −5 … +1 | **+6** |
 | Muzzle velocity | +0.2 … +1.2 | **+6** |
 
@@ -59,8 +59,9 @@ Edit `config.json` and restart the server. No rebuild needed.
 }
 ```
 
-For the two heat values, **lower is better**. Both are penalties above `1.0` in vanilla,
-and the game's heavy barrels — its best heat sinks — sit around `0.82` and `0.86`.
+The two heat values run in opposite directions. `HeatFactor` is how fast the weapon heats,
+so **lower is better**. `CoolFactor` is how fast it sheds that heat, so **higher is
+better** — the best part in the game for it is a carbon fibre handguard at `1.25`.
 
 ## Building
 

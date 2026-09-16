@@ -63,9 +63,9 @@ foreach (var (name, s) in new[] { ("A", suppressorA), ("B", suppressorB) })
 Check(categoryNode.Properties!.Ergonomics == -16, "category Node was modified");
 Check(unrelatedMuzzle.Properties!.Ergonomics == -16, "flash hider was modified");
 
-// Heat fields are penalties in vanilla, so the defaults have to come in under 1.
-Check(config.HeatFactor < 1.0, $"HeatFactor default {config.HeatFactor} is not a help");
-Check(config.CoolFactor < 1.0, $"CoolFactor default {config.CoolFactor} is not a help");
+// The two heat fields run opposite ways: less heat made, more heat shed.
+Check(config.HeatFactor < 1.0, $"HeatFactor default {config.HeatFactor} generates more heat, not less");
+Check(config.CoolFactor > 1.0, $"CoolFactor default {config.CoolFactor} cools slower, not faster");
 
 if (failures.Count > 0)
 {

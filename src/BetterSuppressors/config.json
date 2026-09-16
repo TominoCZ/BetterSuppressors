@@ -3,7 +3,7 @@
   "DurabilityBurn": 1.0,
 
   "HeatFactor": 0.90,
-  "CoolFactor": 0.92,
+  "CoolFactor": 1.25,
 
   "Accuracy": 6,
   "Velocity": 6

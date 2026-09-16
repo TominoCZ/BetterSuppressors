@@ -8,11 +8,11 @@ public sealed class Config
     public double Ergonomics { get; set; } = 0;
     public double DurabilityBurn { get; set; } = 1.0;
 
-    // Both heat fields are penalties above 1.0 and improvements below it. CoolFactor
-    // especially does not read that way, but the vanilla heavy barrels sit at 0.82/0.86
-    // and they are the best heat sinks in the game.
+    // These two run in opposite directions. HeatFactor is how fast the weapon heats, so
+    // lower is better. CoolFactor is how fast it sheds that heat, so higher is better --
+    // the best part in the game for it is a carbon fibre handguard at 1.25.
     public double HeatFactor { get; set; } = 0.90;
-    public double CoolFactor { get; set; } = 0.92;
+    public double CoolFactor { get; set; } = 1.25;
 
     public double Accuracy { get; set; } = 6;
     public double Velocity { get; set; } = 6;
