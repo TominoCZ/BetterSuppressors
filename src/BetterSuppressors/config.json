@@ -1,10 +1,12 @@
 {
-  "Ergonomics": 0,
-  "DurabilityBurn": 1.0,
+  "Ergonomics": { "Mode": "Unchanged", "Value": 0 },
+  "DurabilityBurn": { "Mode": "ScalePenaltyAboveNeutral", "Value": 0.5 },
+  "HeatFactor": { "Mode": "Unchanged", "Value": 0 },
+  "CoolFactor": { "Mode": "Unchanged", "Value": 0 },
+  "Accuracy": { "Mode": "Add", "Value": 1.5 },
+  "Velocity": { "Mode": "Add", "Value": 2.0 },
 
-  "HeatFactor": 0.90,
-  "CoolFactor": 1.25,
-
-  "Accuracy": 6,
-  "Velocity": 6
+  "IncludeDescendants": true,
+  "AdditionalItemIds": [],
+  "ExcludedItemIds": []
 }
